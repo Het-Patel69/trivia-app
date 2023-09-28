@@ -1,17 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import CategorySelector from "../components/CategorySelector";
-import { server, category } from "../API";
 
 import "./SelectCategoryPage.css";
 import { ConfigContext } from "../context/ConfigContext";
 
-export default function SelectCategoryPage({nextStep}) {
-  const {categories, config, setConfig} = useContext(ConfigContext)
+export default function SelectCategoryPage({ nextStep }) {
+  const { categories, config, setConfig } = useContext(ConfigContext);
 
   let categoriesList;
   if (categories) {
     categoriesList = categories.map((category) => {
-      return <CategorySelector clickFunction={nextStep} key={category.id} category={category}/>;
+      return (
+        <CategorySelector
+          clickFunction={nextStep}
+          key={category.id}
+          category={category}
+        />
+      );
     });
   }
   return (
@@ -19,7 +24,17 @@ export default function SelectCategoryPage({nextStep}) {
       <div className="categoriesPage">
         <h1 className="title">Select A category for quiz</h1>
         <div className="skipCategory">
-          <button className="buttonSecondary" onClick={nextStep}>Any Category</button>
+          <button
+            className="buttonSecondary"
+            onClick={() => {
+              setConfig(prev=>{
+                return{...prev, categoryName: "Any Category"}
+              })
+              nextStep();
+            }}
+          >
+            Any Category
+          </button>
         </div>
         <div className="categories">
           {categories ? categoriesList : <h2>Loading...</h2>}
